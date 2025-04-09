@@ -1,0 +1,7 @@
+name: AsyncTest
+version: '1.0.0'
+main: org.nano.asyncTest.AsyncTest
+api-version: '1.20'
+commands:
+  box:
+    aliases: []
