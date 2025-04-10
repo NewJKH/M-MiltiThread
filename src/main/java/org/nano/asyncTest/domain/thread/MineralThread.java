@@ -17,6 +17,7 @@ public class MineralThread extends ItemSorterThread {
     protected void process(ItemStack item) {
         storage.addItem(category, item);
         processedCount.incrementAndGet();
+        super.notifyCompletion();
         System.out.println("[광물 분류기] " + item.getType() + " 처리 완료");
     }
     public int getProcessedCount() {

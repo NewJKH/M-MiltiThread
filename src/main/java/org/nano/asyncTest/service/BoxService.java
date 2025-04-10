@@ -1,5 +1,6 @@
 package org.nano.asyncTest.service;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.nano.asyncTest.domain.box.Category;
@@ -10,6 +11,9 @@ import org.nano.asyncTest.infra.MemoryBoxStorage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
+import static org.nano.asyncTest.AsyncTest.plugin;
 
 public class BoxService {
     private final SorterRegistry sorterRegistry;
@@ -46,6 +50,34 @@ public class BoxService {
     // 분류 결과 조회
     public List<ItemStack> getItemsByCategory(Player player, Category category) {
         return storage.getItems(category);
+    }
+
+    public void showFinalResultTo(Player player, Runnable whenDone) {
+        CountDownLatch latch = new CountDownLatch(2);
+        long start = System.currentTimeMillis();
+
+        sorterRegistry.getSorter(Category.MINERAL).setOnComplete(latch::countDown);
+        sorterRegistry.getSorter(Category.WOOD).setOnComplete(latch::countDown);
+
+        new Thread(() -> {
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            long duration = System.currentTimeMillis() - start;
+            int mineral = sorterRegistry.getSorter(Category.MINERAL).getProcessedCount();
+            int wood = sorterRegistry.getSorter(Category.WOOD).getProcessedCount();
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                player.sendMessage("모든 분류 완료!");
+                player.sendMessage("총 걸린 시간: " + duration + "ms");
+                player.sendMessage("- 광물: " + mineral + "개");
+                player.sendMessage("- 나무: " + wood + "개");
+                if (whenDone != null) whenDone.run();
+            });
+        }).start();
     }
 
 }

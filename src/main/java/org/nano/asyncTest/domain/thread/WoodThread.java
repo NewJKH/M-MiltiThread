@@ -15,6 +15,7 @@ public class WoodThread extends ItemSorterThread{
     protected void process(ItemStack item) {
         storage.addItem(category, item);
         processedCount++;
+        super.notifyCompletion();
         System.out.println("[나무 분류기] " + item.getType() + " 처리 완료");
     }
     public int getProcessedCount() {

@@ -28,9 +28,6 @@ public abstract class ItemSorterThread extends Thread {
             try {
                 ItemStack item = queue.take();
                 process(item);
-                if (queue.isEmpty() && onComplete != null) {
-                    onComplete.run();
-                }
             } catch (InterruptedException e) {
                 break;
             }
@@ -42,5 +39,10 @@ public abstract class ItemSorterThread extends Thread {
 
     public void setOnComplete(Runnable callback) {
         this.onComplete = callback;
+    }
+    public void notifyCompletion() {
+        if (onComplete != null) {
+            onComplete.run();
+        }
     }
 }
