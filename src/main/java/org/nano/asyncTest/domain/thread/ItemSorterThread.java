@@ -9,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class ItemSorterThread extends Thread {
     protected final BlockingQueue<ItemStack> queue = new LinkedBlockingQueue<>();
+    private Runnable onComplete;
     protected final MemoryBoxStorage storage;
     protected final Category category;
 
@@ -27,6 +28,9 @@ public abstract class ItemSorterThread extends Thread {
             try {
                 ItemStack item = queue.take();
                 process(item);
+                if (queue.isEmpty() && onComplete != null) {
+                    onComplete.run();
+                }
             } catch (InterruptedException e) {
                 break;
             }
@@ -34,4 +38,9 @@ public abstract class ItemSorterThread extends Thread {
     }
 
     protected abstract void process(ItemStack item);
+    public abstract int getProcessedCount();
+
+    public void setOnComplete(Runnable callback) {
+        this.onComplete = callback;
+    }
 }

@@ -29,6 +29,7 @@ public class BoxCloseEvent implements Listener {
                     .collect(Collectors.toList());
 
             boxController.submitItems(player, contents);
+            boxController.showProcessingResult(player);
         }
     }
 

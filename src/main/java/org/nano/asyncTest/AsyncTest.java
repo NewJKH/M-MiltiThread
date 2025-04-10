@@ -9,8 +9,11 @@ import java.util.Objects;
 
 public final class AsyncTest extends JavaPlugin {
 
+    public static AsyncTest plugin;
+
     @Override
     public void onEnable() {
+        plugin = this;
         BoxController controller = new BoxController();
 
         Objects.requireNonNull(getCommand("box")).setExecutor(new BoxCommand(controller));

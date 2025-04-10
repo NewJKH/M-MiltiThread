@@ -20,4 +20,8 @@ public class SorterRegistry {
             sorters.get(category).sort(item);
         }
     }
+
+    public ItemSorterThread getSorter(Category category) {
+        return sorters.get(category);
+    }
 }
