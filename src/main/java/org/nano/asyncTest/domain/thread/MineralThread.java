@@ -11,6 +11,7 @@ public class MineralThread extends ItemSorterThread {
 
     public MineralThread(MemoryBoxStorage storage) {
         super(storage, Category.MINERAL);
+
     }
 
     @Override
